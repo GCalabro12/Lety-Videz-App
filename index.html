@@ -7,119 +7,261 @@
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
-<meta name="theme-color" content="#0f0d14">
+<meta name="theme-color" content="#1B1816">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Work+Sans:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-  :root { --bg:#0f0d14; --card:#1b1824; --text:#f3eef8; --muted:#a79fb5; --accent:#c86bfa; }
+  /* Identidad: Ébano · Marfil · Burdeos · Latón */
+  :root { --ebano:#1B1816; --marfil:#F6EFE2; --blanco:#FDFBF6; --burdeos:#7B1F2B; --laton:#B38F5A; --gris:#5C554D;
+          --serif:'Cormorant Garamond',Georgia,serif; --sans:'Work Sans',system-ui,sans-serif; }
   * { box-sizing:border-box; }
-  body { margin:0; background:var(--bg); color:var(--text); font-family:system-ui,-apple-system,"Segoe UI",sans-serif; }
-  header { padding:28px 16px 8px; text-align:center; }
-  header h1 { margin:0; font-size:2.2rem; letter-spacing:.04em; color:var(--accent); cursor:pointer; }
-  header p { margin:6px 0 0; color:var(--muted); }
-  main { max-width:960px; margin:0 auto; padding:16px; }
-  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:20px; }
-  .album { background:var(--card); border-radius:14px; overflow:hidden; cursor:pointer; transition:transform .15s; text-decoration:none; color:inherit; }
-  .album:hover { transform:translateY(-4px); }
-  .album img { width:100%; aspect-ratio:1; object-fit:cover; display:block; }
-  .album div { padding:12px; }
-  .album b { display:block; }
-  .album small { color:var(--muted); }
-  .back { color:var(--accent); text-decoration:none; display:inline-block; margin-bottom:16px; }
-  .detail { display:flex; gap:24px; flex-wrap:wrap; align-items:flex-end; margin-bottom:24px; }
-  .detail img { width:min(300px,100%); border-radius:14px; box-shadow:0 10px 40px #0008; }
-  .detail h2 { margin:0 0 6px; font-size:1.8rem; }
-  .detail p { margin:0; color:var(--muted); }
-  ol { list-style:none; padding:0; margin:0; }
-  li { display:flex; align-items:center; gap:12px; padding:10px 12px; border-radius:10px; cursor:pointer; }
-  li:hover, li.playing { background:var(--card); }
-  li.playing .t { color:var(--accent); }
-  li .n { width:24px; text-align:right; color:var(--muted); }
+  body { margin:0; background:var(--marfil); color:var(--ebano); font-family:var(--sans); }
+  a { color:inherit; text-decoration:none; }
+  .wrap { max-width:560px; margin:0 auto; padding:0 24px 120px; }
+
+  /* Teclas de piano decorativas */
+  .teclas { height:18px; display:flex; justify-content:center; gap:0; max-width:560px; margin:0 auto; }
+  .teclas i { width:15px; background:var(--ebano); margin:0 27px; }
+  .teclas i.r { background:var(--burdeos); }
+
+  /* Inicio */
+  .saludo { margin:44px 0 0; color:var(--gris); font-size:1.15rem; }
+  .nombre { display:flex; align-items:center; justify-content:space-between; gap:16px; }
+  .nombre h1 { font-family:var(--serif); font-weight:500; font-size:3.4rem; line-height:1; margin:6px 0 24px; }
+  .nombre h1 em { color:var(--burdeos); }
+  .nombre img { width:72px; height:72px; border-radius:50%; object-fit:cover; border:2px solid var(--laton); margin-bottom:18px; }
+  .hoy { background:var(--ebano); color:var(--marfil); border-radius:22px; padding:24px; margin-bottom:28px; }
+  .etq { color:var(--laton); font-weight:700; letter-spacing:.22em; font-size:.8rem; text-transform:uppercase; }
+  .hoy h2 { font-family:var(--serif); font-weight:500; font-size:2rem; margin:10px 0 4px; }
+  .hoy p { margin:0 0 20px; color:#d8cfbf; }
+  .btn { display:flex; align-items:center; justify-content:center; gap:12px; width:100%; border:none; border-radius:16px;
+         background:var(--burdeos); color:#fff; font:700 1.25rem var(--sans); padding:18px; cursor:pointer; }
+  .btn.borde { background:none; border:2px solid var(--marfil); color:var(--marfil); }
+  .subt { font-family:var(--serif); font-size:1.6rem; font-weight:600; margin:0 0 14px; }
+  .discos { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  .disco { background:var(--blanco); border:2px solid var(--ebano); border-radius:18px; overflow:hidden; transition:transform .15s; }
+  .disco:hover { transform:translateY(-3px); }
+  .disco img { width:100%; aspect-ratio:16/10; object-fit:cover; display:block; border-bottom:2px solid var(--ebano); }
+  .disco div { padding:12px 14px 14px; }
+  .disco small { color:var(--burdeos); font-weight:700; letter-spacing:.12em; font-size:.7rem; text-transform:uppercase; }
+  .disco b { display:block; font-family:var(--serif); font-size:1.35rem; font-weight:600; line-height:1.15; margin-top:2px; }
+  .firma { text-align:center; font-family:var(--serif); font-style:italic; color:var(--burdeos); font-size:1.6rem; margin:48px 0 0; }
+
+  /* Página de disco */
+  .volver { display:inline-flex; width:52px; height:52px; border-radius:50%; border:2px solid var(--ebano); align-items:center; justify-content:center; font-size:1.4rem; margin:28px 0 20px; }
+  .caratula { width:100%; aspect-ratio:16/10; object-fit:cover; border-radius:20px; border:2px solid var(--ebano); display:block; }
+  .cab h2 { font-family:var(--serif); font-weight:500; font-size:2.6rem; margin:14px 0 2px; line-height:1; }
+  .cab p { color:var(--gris); margin:0 0 18px; }
+  ol { list-style:none; padding:0; margin:20px 0 0; }
+  li { display:flex; align-items:center; gap:14px; padding:14px 6px; border-bottom:1px solid #e3d9c6; cursor:pointer; }
+  li:hover { background:var(--blanco); }
+  li .n { font-family:var(--serif); font-size:1.4rem; color:var(--laton); width:26px; text-align:right; }
   li .t { flex:1; }
-  li .d { color:var(--muted); font-variant-numeric:tabular-nums; }
-  li a { color:var(--muted); font-size:.85rem; }
-  .player { position:sticky; bottom:0; background:var(--card); padding:12px 16px; display:none; gap:12px; align-items:center; border-top:1px solid #333; }
-  .player.on { display:flex; }
-  .player span { flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-  .note { color:var(--muted); font-size:.85rem; margin-top:20px; }
+  li .t b { display:block; font-family:var(--serif); font-size:1.35rem; font-weight:600; }
+  li .t small { color:var(--gris); }
+  li .d { color:var(--gris); font-variant-numeric:tabular-nums; }
+  li.sonando .t b { color:var(--burdeos); }
+
+  /* Mini reproductor */
+  .mini { position:fixed; left:12px; right:12px; bottom:12px; max-width:536px; margin:0 auto; background:var(--ebano); color:var(--marfil);
+          border-radius:18px; padding:12px 14px; display:none; align-items:center; gap:12px; cursor:pointer; box-shadow:0 10px 30px #0004; }
+  .mini.on { display:flex; }
+  .mini span { flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-family:var(--serif); font-size:1.25rem; }
+  .mini button { background:var(--burdeos); color:#fff; border:none; width:44px; height:44px; border-radius:50%; font-size:1.1rem; cursor:pointer; }
+
+  /* Pantalla "Sonando" */
+  .sonar { position:fixed; inset:0; background:var(--ebano); color:var(--marfil); display:none; flex-direction:column; overflow:auto; }
+  .sonar.on { display:flex; }
+  .sonar .wrap { flex:1; padding-bottom:20px; text-align:center; width:100%; }
+  .sonar .top { display:flex; align-items:center; margin:28px 0; }
+  .sonar .top button { width:56px; height:56px; border-radius:50%; border:2px solid #4a443d; background:none; color:var(--marfil); font-size:1.4rem; cursor:pointer; }
+  .sonar .top .etq { flex:1; margin-right:56px; }
+  .sonar h2 { font-family:var(--serif); font-weight:500; font-size:2.4rem; margin:0; line-height:1.05; }
+  .sonar .cred { color:#d8cfbf; margin:8px 0 26px; }
+  .aro { width:min(230px,62vw); aspect-ratio:1; border-radius:50%; border:3px solid var(--laton); margin:0 auto 26px;
+         display:flex; flex-direction:column; align-items:center; justify-content:center; }
+  .aro b { font-family:var(--serif); font-size:3.6rem; font-weight:500; line-height:1; }
+  .aro small { color:#d8cfbf; margin-top:6px; }
+  .ctrl { display:flex; justify-content:center; gap:22px; margin-bottom:24px; }
+  .ctrl button { width:70px; height:70px; border-radius:50%; border:2px solid var(--marfil); background:none; color:var(--marfil); font-size:1.4rem; cursor:pointer; }
+  .sonar .btn { margin-bottom:12px; }
+  .piano { display:flex; height:90px; background:var(--marfil); position:relative; flex-shrink:0; }
+  .piano i { flex:1; border-right:1px solid var(--ebano); }
+  .piano em { position:absolute; top:0; width:4%; height:55%; background:var(--ebano); }
+  #yt { position:absolute; width:1px; height:1px; opacity:0; pointer-events:none; }
 </style>
 </head>
 <body>
-<header><h1 onclick="location.hash=''">Lety Videz</h1><p>Discografía · v1.2</p></header>
-<main id="app">Cargando…</main>
-<div class="player" id="player"><span id="now"></span><audio id="audio" controls></audio></div>
+<div class="teclas"><i></i><i></i><i style="width:1px"></i><i class="r"></i><i></i></div>
+<main class="wrap" id="app"></main>
+
+<div class="mini" id="mini" onclick="abrirSonar()"><span id="miniT"></span><button id="miniB" onclick="event.stopPropagation();toggle()">❚❚</button></div>
+
+<section class="sonar" id="sonar">
+  <div class="wrap">
+    <div class="top"><button onclick="cerrarSonar()">‹</button><span class="etq">Sonando</span></div>
+    <h2 id="sT"></h2>
+    <p class="cred" id="sC"></p>
+    <div class="aro"><b id="sTiempo">0:00</b><small id="sDur"></small></div>
+    <div class="ctrl"><button onclick="prev()">⏮</button><button onclick="next()">⏭</button></div>
+    <button class="btn" id="sPP" onclick="toggle()">❚❚ Pausar</button>
+    <a class="btn borde" id="sYT" target="_blank">▶ Ver en YouTube</a>
+  </div>
+  <div class="piano" id="piano"></div>
+</section>
+<div id="yt"></div>
 
 <script>
-const ARTIST_ID = 1734510859; // Lety Videz en Apple Music / iTunes
+const VERSION = 'v1.4';
+// Discos sacados del canal de YouTube @letyvidez4407 (listas de reproducción)
+// Formato de cada canción: [id de vídeo, título, créditos, duración]
+const DISCOS = [
+  { n:4, titulo:'Noche de luna', canciones:[
+    ['R-4vHeovLN4','Preludio para una noche de luna','Violín: Laura Orallo','5:30'],
+    ['15B_W1TA_iA',"I'm in love",'Voz: Fernando Calabró · Percusión: Gisele Cornejo','4:01'],
+    ['sZtb2Bwx5j0','Amar la vida','Voz: Gisele Cornejo','3:29'],
+    ['5DShGHxw_aw','La danza de los duendes','','5:10'],
+    ['bYHPzvCRT0w','Yo escribo tu nombre','Voz: Norberto Calabró','3:31'],
+    ['zYDqGwqZ66o','Você é toda minha vida','Voz: Gisele Cornejo','4:38'],
+    ['BfVDv3CdNKM','Fantasía en Re menor','','3:27'],
+    ['l6kiqiG9S_g',"Je ne t'oublierai pas",'Voz: Fernando Calabró','4:10'],
+    ['D0So3Pla0Wg','Evocaciones','','4:51'] ]},
+  { n:3, titulo:'Azul intenso', canciones:[
+    ['a-OG6lgD5ro','Destellos','','2:31'],
+    ['2fNJ5creM6Y','Reencuentro','','2:34'],
+    ['zoGbtKDWDzw','Je pense à toi','','2:39'],
+    ['RqBqfnCiOag','Desde el alma','','3:18'],
+    ['_KVBYm_yCas','Mis recuerdos','','3:23'],
+    ['WVrOXkVO3lQ','Amor prohibido','','1:56'],
+    ['w2iT3wC6Xww','Chicago Style','','2:44'],
+    ['B0gwTdXX6GE','Azul intenso','','4:00'],
+    ['wupTlTVDTg4','Amanecer tempestuoso','','3:19'] ]},
+  { n:2, titulo:'Incertidumbre', canciones:[
+    ['md_BVv0YJDA','Preludio','','2:41'],
+    ['emso8o9ajbE','Te busco y no te encuentro','','2:24'],
+    ['ylJkFTzMxX8','Otoño en Baden Baden','','3:28'],
+    ['jx8Zvg5aN6c','Ascoltami e amami','','2:07'],
+    ['wIxlSmjcQwI','Quizás mañana','','3:03'],
+    ['kbOuUE4R6h0','Olvídate de mí','','2:42'],
+    ['8e4thfoezwU','El resplandor de tu mirada','','5:33'],
+    ['EM5I42Lqr7c','Incertidumbre','','3:14'] ]},
+  { n:1, titulo:'Ensueños', canciones:[
+    ['uRI_wRZs7-A','Dreaming','','3:47'],
+    ['897nGiV_o0Y','Reencuentro','','2:42'],
+    ['8PKNwtNnbEQ','Crepúsculo','','3:47'],
+    ['9TtpLRRY7rI','The Time','','1:23'],
+    ['rYprKSNAS44','Nostalgia','','5:01'],
+    ['oGXaE-tP-6c','Despedida','','2:48'],
+    ['4jyaH9UFPQM','Dilema','','4:41'],
+    ['N6-FZOzs5WA','Barcarola','','4:58'],
+    ['Jtj7Km6sWmk','Aires de mi tierra','','3:26'],
+    ['fXkWZ30NBLY','Recuerdos','','2:53'] ]},
+];
+
 const app = document.getElementById('app');
-const audio = document.getElementById('audio');
-let albums = [];
+const portada = d => `https://i.ytimg.com/vi/${d.canciones[0][0]}/hqdefault.jpg`;
+const mmss = s => Math.floor(s/60) + ':' + String(Math.floor(s%60)).padStart(2,'0');
+let cola = [], actual = -1, yt, ytListo = false, pendiente = null;
 
-// JSONP para evitar problemas de CORS con la API de iTunes
-function itunes(url) {
-  return new Promise((resolve, reject) => {
-    const cb = 'cb' + Math.random().toString(36).slice(2);
-    const s = document.createElement('script');
-    window[cb] = d => { resolve(d); delete window[cb]; s.remove(); };
-    s.onerror = reject;
-    s.src = url + '&callback=' + cb;
-    document.body.appendChild(s);
-  });
-}
-const big = url => url.replace('100x100bb', '600x600bb');
-const mmss = ms => { const s = Math.round(ms/1000); return Math.floor(s/60) + ':' + String(s%60).padStart(2,'0'); };
-const esc = s => s.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+// "La pieza de hoy": cambia cada día, la misma para todo el día
+const todas = DISCOS.flatMap(d => d.canciones.map(c => ({ c, d })));
+const hoy = todas[Math.floor(Date.now() / 864e5) % todas.length];
 
-async function loadAlbums() {
-  const d = await itunes(`https://itunes.apple.com/lookup?id=${ARTIST_ID}&entity=album&limit=200&country=es`);
-  albums = d.results.filter(r => r.wrapperType === 'collection')
-    .sort((a,b) => b.releaseDate.localeCompare(a.releaseDate));
+function saludo() {
+  const h = new Date().getHours();
+  return h < 6 ? 'Buenas noches,' : h < 13 ? 'Buenos días,' : h < 21 ? 'Buenas tardes,' : 'Buenas noches,';
 }
 
 function showList() {
-  app.innerHTML = `<div class="grid">${albums.map(a => `
-    <a class="album" href="#disco/${a.collectionId}">
-      <img src="${big(a.artworkUrl100)}" alt="">
-      <div><b>${esc(a.collectionName)}</b><small>${a.releaseDate.slice(0,4)} · ${a.trackCount} canciones</small></div>
-    </a>`).join('')}</div>`;
-}
-
-async function showAlbum(id) {
-  app.innerHTML = 'Cargando…';
-  const d = await itunes(`https://itunes.apple.com/lookup?id=${id}&entity=song&country=es`);
-  const album = d.results.find(r => r.wrapperType === 'collection');
-  const songs = d.results.filter(r => r.wrapperType === 'track').sort((a,b) => a.discNumber-b.discNumber || a.trackNumber-b.trackNumber);
   app.innerHTML = `
-    <a class="back" href="#">← Todos los discos</a>
-    <div class="detail">
-      <img src="${big(album.artworkUrl100)}" alt="Carátula">
-      <div><h2>${esc(album.collectionName)}</h2><p>${album.releaseDate.slice(0,4)} · ${songs.length} canciones</p></div>
-    </div>
-    <ol>${songs.map((s,i) => `
-      <li data-i="${i}"><span class="n">${s.trackNumber}</span><span class="t">${esc(s.trackName)}</span>
-      <span class="d">${mmss(s.trackTimeMillis)}</span>
-      <a href="${s.trackViewUrl}" target="_blank" onclick="event.stopPropagation()">completa ↗</a></li>`).join('')}</ol>
-    <p class="note">Se reproducen avances de 30 s. Pulsa “completa ↗” para escucharla entera en Apple Music.</p>`;
-  app.querySelectorAll('li').forEach(li => li.onclick = () => play(songs, +li.dataset.i));
+    <p class="saludo">${saludo()}</p>
+    <div class="nombre"><h1>Lety <em>Videz</em></h1><img src="lety-videz.png" alt="Lety Videz"></div>
+    <section class="hoy">
+      <div class="etq">La pieza de hoy</div>
+      <h2>${hoy.c[1]}</h2>
+      <p>Disco ${hoy.d.n} · ${hoy.d.titulo}</p>
+      <button class="btn" onclick="tocarHoy()">▷ Escuchar ahora</button>
+    </section>
+    <h3 class="subt">Discos</h3>
+    <div class="discos">${DISCOS.map(d => `
+      <a class="disco" href="#disco/${d.n}">
+        <img src="${portada(d)}" alt="">
+        <div><small>Disco ${d.n}</small><b>${d.titulo}</b></div>
+      </a>`).join('')}</div>
+    <p class="firma">Cada tecla, una vida entera.</p>
+    <p style="text-align:center;color:var(--gris);font-size:.8rem">${VERSION}</p>`;
 }
 
-function play(songs, i) {
-  const s = songs[i];
-  if (!s) return;
-  document.querySelectorAll('li').forEach(li => li.classList.toggle('playing', +li.dataset.i === i));
-  document.getElementById('now').textContent = '▶ ' + s.trackName;
-  document.getElementById('player').classList.add('on');
-  audio.src = s.previewUrl;
-  audio.play();
-  audio.onended = () => play(songs, i + 1); // pasa a la siguiente
+function showAlbum(n) {
+  const d = DISCOS.find(x => x.n == n);
+  if (!d) return showList();
+  app.innerHTML = `
+    <a class="volver" href="#">‹</a>
+    <img class="caratula" src="${portada(d)}" alt="Carátula">
+    <div class="cab"><h2>${d.titulo}</h2><p>Disco ${d.n} · ${d.canciones.length} canciones</p>
+    <button class="btn" onclick="tocarDisco(${d.n},0)">▷ Escuchar el disco</button></div>
+    <ol>${d.canciones.map((c,i) => `
+      <li data-i="${i}" onclick="tocarDisco(${d.n},${i})"><span class="n">${i+1}</span>
+      <span class="t"><b>${c[1]}</b>${c[2] ? `<small>${c[2]}</small>` : ''}</span>
+      <span class="d">${c[3]}</span></li>`).join('')}</ol>`;
+  marcar();
 }
 
-async function route() {
-  if (!albums.length) await loadAlbums();
+function tocarDisco(n, i) { cola = DISCOS.find(x => x.n == n).canciones; play(i); abrirSonar(); }
+function tocarHoy() { tocarDisco(hoy.d.n, hoy.d.canciones.indexOf(hoy.c)); }
+
+function marcar() {
+  const id = cola[actual]?.[0];
+  const d = DISCOS.find(x => x.n == location.hash.split('/')[1]);
+  document.querySelectorAll('li').forEach(li => li.classList.toggle('sonando', !!d && d.canciones[+li.dataset.i][0] === id));
+}
+
+// Reproductor de YouTube oculto: suena la canción completa
+function onYouTubeIframeAPIReady() {
+  yt = new YT.Player('yt', { height:'1', width:'1', playerVars:{ playsinline:1 },
+    events: {
+      onReady: () => { ytListo = true; if (pendiente) { yt.loadVideoById(pendiente); pendiente = null; } },
+      onStateChange: e => { if (e.data === YT.PlayerState.ENDED) next(); botones(e.data === YT.PlayerState.PLAYING); },
+      onError: () => next()
+    }});
+}
+function botones(sonando) {
+  document.getElementById('miniB').textContent = sonando ? '❚❚' : '▶';
+  document.getElementById('sPP').textContent = sonando ? '❚❚ Pausar' : '▶ Seguir';
+}
+function play(i) {
+  const c = cola[i];
+  if (!c) return;
+  actual = i;
+  document.getElementById('miniT').textContent = '♪ ' + c[1];
+  document.getElementById('mini').classList.add('on');
+  document.getElementById('sT').textContent = c[1];
+  document.getElementById('sC').textContent = c[2] || 'Lety Videz';
+  document.getElementById('sDur').textContent = 'de ' + c[3];
+  document.getElementById('sTiempo').textContent = '0:00';
+  document.getElementById('sYT').href = 'https://www.youtube.com/watch?v=' + c[0];
+  ytListo ? yt.loadVideoById(c[0]) : pendiente = c[0];
+  marcar();
+}
+function next() { play(actual + 1); }
+function prev() { play(Math.max(0, actual - 1)); }
+function toggle() { if (!ytListo) return; yt.getPlayerState() === YT.PlayerState.PLAYING ? yt.pauseVideo() : yt.playVideo(); }
+function abrirSonar() { document.getElementById('sonar').classList.add('on'); }
+function cerrarSonar() { document.getElementById('sonar').classList.remove('on'); }
+setInterval(() => { if (ytListo && yt.getCurrentTime) document.getElementById('sTiempo').textContent = mmss(yt.getCurrentTime() || 0); }, 500);
+
+// Teclado decorativo de la pantalla "Sonando"
+document.getElementById('piano').innerHTML = '<i></i>'.repeat(7) +
+  [1,2,4,5,6].map(k => `<em style="left:calc(${k*100/7}% - 2%)${k===5?';background:var(--burdeos)':''}"></em>`).join('');
+
+function route() {
   const m = location.hash.match(/^#disco\/(\d+)/);
   m ? showAlbum(m[1]) : showList();
   scrollTo(0, 0);
 }
 addEventListener('hashchange', route);
-route().catch(() => app.textContent = 'No se pudo cargar la discografía. Revisa tu conexión.');
+route();
 </script>
+<script src="https://www.youtube.com/iframe_api"></script>
 </body>
 </html>
