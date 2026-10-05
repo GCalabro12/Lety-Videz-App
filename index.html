@@ -133,11 +133,11 @@
   <button id="instB" onclick="instalar()">Instalar</button><button class="x" onclick="cerrarInst()">✕</button></div>
 
 <script>
-const VERSION = 'v1.6';
+const VERSION = 'v1.7';
 // Discos sacados del canal de YouTube @letyvidez4407 (listas de reproducción)
 // Formato de cada canción: [id de vídeo, título, créditos, duración]
 const DISCOS = [
-  { n:4, titulo:'Noche de luna', canciones:[
+  { n:4, titulo:'Noche de luna', anio:2025, canciones:[
     ['R-4vHeovLN4','Preludio para una noche de luna','Violín: Laura Orallo','5:30'],
     ['15B_W1TA_iA',"I'm in love",'Voz: Fernando Calabró · Percusión: Gisele Cornejo','4:01'],
     ['sZtb2Bwx5j0','Amar la vida','Voz: Gisele Cornejo','3:29'],
@@ -147,7 +147,7 @@ const DISCOS = [
     ['BfVDv3CdNKM','Fantasía en Re menor','','3:27'],
     ['l6kiqiG9S_g',"Je ne t'oublierai pas",'Voz: Fernando Calabró','4:10'],
     ['D0So3Pla0Wg','Evocaciones','','4:51'] ]},
-  { n:3, titulo:'Azul intenso', canciones:[
+  { n:3, titulo:'Azul intenso', anio:2023, canciones:[
     ['a-OG6lgD5ro','Destellos','','2:31'],
     ['2fNJ5creM6Y','Reencuentro','','2:34'],
     ['zoGbtKDWDzw','Je pense à toi','','2:39'],
@@ -157,7 +157,7 @@ const DISCOS = [
     ['w2iT3wC6Xww','Chicago Style','','2:44'],
     ['B0gwTdXX6GE','Azul intenso','','4:00'],
     ['wupTlTVDTg4','Amanecer tempestuoso','','3:19'] ]},
-  { n:2, titulo:'Incertidumbre', canciones:[
+  { n:2, titulo:'Incertidumbre', anio:2022, canciones:[
     ['md_BVv0YJDA','Preludio','','2:41'],
     ['emso8o9ajbE','Te busco y no te encuentro','','2:24'],
     ['ylJkFTzMxX8','Otoño en Baden Baden','','3:28'],
@@ -166,7 +166,7 @@ const DISCOS = [
     ['kbOuUE4R6h0','Olvídate de mí','','2:42'],
     ['8e4thfoezwU','El resplandor de tu mirada','','5:33'],
     ['EM5I42Lqr7c','Incertidumbre','','3:14'] ]},
-  { n:1, titulo:'Ensueños', canciones:[
+  { n:1, titulo:'Ensueños', anio:2021, canciones:[
     ['uRI_wRZs7-A','Dreaming','','3:47'],
     ['897nGiV_o0Y','Reencuentro','','2:42'],
     ['8PKNwtNnbEQ','Crepúsculo','','3:47'],
@@ -196,20 +196,19 @@ function saludo() {
 function showList() {
   app.innerHTML = `
     <p class="saludo">${saludo()}</p>
-    <div class="nombre"><h1>Lety <em>Videz</em></h1><img src="lety-videz.png" alt="Lety Videz"></div>
+    <div class="nombre"><h1><em>Lety Videz</em></h1><img src="lety-videz.png" alt="Lety Videz"></div>
     <section class="hoy">
       <div class="etq">La pieza de hoy</div>
       <h2>${hoy.c[1]}</h2>
-      <p>Disco ${hoy.d.n} · ${hoy.d.titulo}</p>
+      <p>${hoy.d.titulo}, ${hoy.d.anio}</p>
       <button class="btn" onclick="tocarHoy()">▷ Escuchar ahora</button>
     </section>
     <h3 class="subt">Discos</h3>
     <div class="discos">${DISCOS.map(d => `
       <a class="disco" href="#disco/${d.n}">
         <img src="${portada(d)}" alt="">
-        <div><small>Disco ${d.n}</small><b>${d.titulo}</b></div>
+        <div><b>${d.titulo}</b><small>${d.anio}</small></div>
       </a>`).join('')}</div>
-    <p class="firma">Cada tecla, una vida entera.</p>
     <p style="text-align:center;color:var(--gris);font-size:.8rem">${VERSION}</p>`;
 }
 
@@ -219,7 +218,7 @@ function showAlbum(n) {
   app.innerHTML = `
     <a class="volver" href="#">‹</a>
     <img class="caratula" src="${portada(d)}" alt="Carátula">
-    <div class="cab"><h2>${d.titulo}</h2><p>Disco ${d.n} · ${d.canciones.length} canciones</p>
+    <div class="cab"><h2>${d.titulo}</h2><p>${d.anio} · ${d.canciones.length} canciones</p>
     <button class="btn" onclick="tocarDisco(${d.n},0)">▷ Escuchar el disco</button></div>
     <ol>${d.canciones.map((c,i) => `
       <li data-i="${i}" onclick="tocarDisco(${d.n},${i})"><span class="n">${i+1}</span>
