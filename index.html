@@ -41,7 +41,7 @@
   .discos { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
   .disco { background:var(--blanco); border:2px solid var(--ebano); border-radius:18px; overflow:hidden; transition:transform .15s; }
   .disco:hover { transform:translateY(-3px); }
-  .disco img { width:100%; aspect-ratio:16/10; object-fit:cover; display:block; border-bottom:2px solid var(--ebano); }
+  .disco img { width:100%; aspect-ratio:1; object-fit:contain; background:var(--ebano); display:block; border-bottom:2px solid var(--ebano); }
   .disco div { padding:12px 14px 14px; }
   .disco small { color:var(--burdeos); font-weight:700; letter-spacing:.12em; font-size:.7rem; text-transform:uppercase; }
   .disco b { display:block; font-family:var(--serif); font-size:1.35rem; font-weight:600; line-height:1.15; margin-top:2px; }
@@ -49,7 +49,7 @@
 
   /* Página de disco */
   .volver { display:inline-flex; width:52px; height:52px; border-radius:50%; border:2px solid var(--ebano); align-items:center; justify-content:center; font-size:1.4rem; margin:28px 0 20px; }
-  .caratula { width:100%; aspect-ratio:16/10; object-fit:cover; border-radius:20px; border:2px solid var(--ebano); display:block; }
+  .caratula { width:min(100%,420px); margin:0 auto; aspect-ratio:1; object-fit:contain; background:var(--ebano); border-radius:20px; border:2px solid var(--ebano); display:block; }
   .cab h2 { font-family:var(--serif); font-weight:500; font-size:2.6rem; margin:14px 0 2px; line-height:1; }
   .cab p { color:var(--gris); margin:0 0 18px; }
   ol { list-style:none; padding:0; margin:20px 0 0; }
@@ -78,17 +78,26 @@
   .sonar .top .etq { flex:1; margin-right:56px; }
   .sonar h2 { font-family:var(--serif); font-weight:500; font-size:2.4rem; margin:0; line-height:1.05; }
   .sonar .cred { color:#d8cfbf; margin:8px 0 26px; }
-  .aro { width:min(230px,62vw); aspect-ratio:1; border-radius:50%; border:3px solid var(--laton); margin:0 auto 26px;
-         display:flex; flex-direction:column; align-items:center; justify-content:center; }
-  .aro b { font-family:var(--serif); font-size:3.6rem; font-weight:500; line-height:1; }
-  .aro small { color:#d8cfbf; margin-top:6px; }
+  .sPortada { width:min(300px,75vw); aspect-ratio:1; object-fit:contain; border-radius:18px; border:3px solid var(--laton); display:block; margin:0 auto 14px; background:#000; }
+  .tiempo { font-family:var(--serif); font-size:1.6rem; margin-bottom:18px; }
+  .tiempo small { color:#d8cfbf; font-family:var(--sans); font-size:.95rem; }
+  .vol { display:flex; align-items:center; gap:12px; margin:0 0 22px; color:#d8cfbf; font-size:1.3rem; }
+  .vol input { flex:1; accent-color:var(--laton); height:28px; }
+  #ytCaja { height:0; border:0 !important; aspect-ratio:auto; margin-top:12px; border-radius:14px; overflow:hidden; border:2px solid var(--laton); }
+  #ytCaja.on { border:2px solid var(--laton) !important; width:100%; height:auto; aspect-ratio:16/9; }
+  #ytCaja iframe { width:100%; height:100%; }
+  .instalar { position:fixed; top:12px; left:12px; right:12px; max-width:536px; margin:0 auto; background:var(--burdeos); color:#fff; border-radius:16px;
+              padding:14px 16px; display:none; align-items:center; gap:12px; z-index:10; box-shadow:0 10px 30px #0004; }
+  .instalar.on { display:flex; }
+  .instalar span { flex:1; }
+  .instalar button { border:none; border-radius:12px; padding:10px 14px; font:700 1rem var(--sans); cursor:pointer; background:var(--marfil); color:var(--burdeos); }
+  .instalar button.x { background:none; color:#fff; font-size:1.3rem; padding:6px; }
   .ctrl { display:flex; justify-content:center; gap:22px; margin-bottom:24px; }
   .ctrl button { width:70px; height:70px; border-radius:50%; border:2px solid var(--marfil); background:none; color:var(--marfil); font-size:1.4rem; cursor:pointer; }
   .sonar .btn { margin-bottom:12px; }
   .piano { display:flex; height:90px; background:var(--marfil); position:relative; flex-shrink:0; }
   .piano i { flex:1; border-right:1px solid var(--ebano); }
   .piano em { position:absolute; top:0; width:4%; height:55%; background:var(--ebano); }
-  #yt { position:absolute; width:1px; height:1px; opacity:0; pointer-events:none; }
 </style>
 </head>
 <body>
@@ -102,17 +111,21 @@
     <div class="top"><button onclick="cerrarSonar()">‹</button><span class="etq">Sonando</span></div>
     <h2 id="sT"></h2>
     <p class="cred" id="sC"></p>
-    <div class="aro"><b id="sTiempo">0:00</b><small id="sDur"></small></div>
+    <img class="sPortada" id="sPortada" alt="Portada">
+    <div class="tiempo"><span id="sTiempo">0:00</span> <small id="sDur"></small></div>
     <div class="ctrl"><button onclick="prev()">⏮</button><button onclick="next()">⏭</button></div>
+    <div class="vol">🔈<input type="range" id="vol" min="0" max="100" value="100" oninput="volumen(this.value)">🔊</div>
     <button class="btn" id="sPP" onclick="toggle()">❚❚ Pausar</button>
-    <a class="btn borde" id="sYT" target="_blank">▶ Ver en YouTube</a>
+    <button class="btn borde" id="sVer" onclick="verVideo()">▶ Ver vídeo</button>
+    <div id="ytCaja"><div id="yt"></div></div>
   </div>
   <div class="piano" id="piano"></div>
 </section>
-<div id="yt"></div>
+<div class="instalar" id="instalar"><span id="instT">¿Instalar la app en tu dispositivo?</span>
+  <button id="instB" onclick="instalar()">Instalar</button><button class="x" onclick="cerrarInst()">✕</button></div>
 
 <script>
-const VERSION = 'v1.4';
+const VERSION = 'v1.5';
 // Discos sacados del canal de YouTube @letyvidez4407 (listas de reproducción)
 // Formato de cada canción: [id de vídeo, título, créditos, duración]
 const DISCOS = [
@@ -159,7 +172,7 @@ const DISCOS = [
 ];
 
 const app = document.getElementById('app');
-const portada = d => `https://i.ytimg.com/vi/${d.canciones[0][0]}/hqdefault.jpg`;
+const portada = d => `portadas/disco${d.n}.jpg`;
 const mmss = s => Math.floor(s/60) + ':' + String(Math.floor(s%60)).padStart(2,'0');
 let cola = [], actual = -1, yt, ytListo = false, pendiente = null;
 
@@ -218,7 +231,7 @@ function marcar() {
 
 // Reproductor de YouTube oculto: suena la canción completa
 function onYouTubeIframeAPIReady() {
-  yt = new YT.Player('yt', { height:'1', width:'1', playerVars:{ playsinline:1 },
+  yt = new YT.Player('yt', { height:'100%', width:'100%', playerVars:{ playsinline:1 },
     events: {
       onReady: () => { ytListo = true; if (pendiente) { yt.loadVideoById(pendiente); pendiente = null; } },
       onStateChange: e => { if (e.data === YT.PlayerState.ENDED) next(); botones(e.data === YT.PlayerState.PLAYING); },
@@ -237,15 +250,36 @@ function play(i) {
   document.getElementById('mini').classList.add('on');
   document.getElementById('sT').textContent = c[1];
   document.getElementById('sC').textContent = c[2] || 'Lety Videz';
-  document.getElementById('sDur').textContent = 'de ' + c[3];
+  document.getElementById('sDur').textContent = '/ ' + c[3];
   document.getElementById('sTiempo').textContent = '0:00';
-  document.getElementById('sYT').href = 'https://www.youtube.com/watch?v=' + c[0];
+  document.getElementById('sPortada').src = portada(DISCOS.find(d => d.canciones === cola));
   ytListo ? yt.loadVideoById(c[0]) : pendiente = c[0];
   marcar();
 }
 function next() { play(actual + 1); }
 function prev() { play(Math.max(0, actual - 1)); }
 function toggle() { if (!ytListo) return; yt.getPlayerState() === YT.PlayerState.PLAYING ? yt.pauseVideo() : yt.playVideo(); }
+function volumen(v) { if (ytListo) { yt.setVolume(+v); yt.unMute(); } }
+function verVideo() {
+  const on = document.getElementById('ytCaja').classList.toggle('on');
+  document.getElementById('sVer').textContent = on ? '✕ Ocultar vídeo' : '▶ Ver vídeo';
+}
+
+// Botón "Instalar la app"
+let avisoInst = null;
+const yaInstalada = matchMedia('(display-mode: standalone)').matches || navigator.standalone;
+const esIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+addEventListener('beforeinstallprompt', e => { e.preventDefault(); avisoInst = e; if (!yaInstalada) document.getElementById('instalar').classList.add('on'); });
+if (esIOS && !yaInstalada) {
+  document.getElementById('instT').textContent = 'Para instalarla: pulsa Compartir ⬆ y luego "Añadir a pantalla de inicio".';
+  document.getElementById('instB').style.display = 'none';
+  document.getElementById('instalar').classList.add('on');
+}
+async function instalar() { if (!avisoInst) return; avisoInst.prompt(); await avisoInst.userChoice; avisoInst = null; cerrarInst(); }
+function cerrarInst() { document.getElementById('instalar').classList.remove('on'); }
+addEventListener('appinstalled', cerrarInst);
+if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js');
+
 function abrirSonar() { document.getElementById('sonar').classList.add('on'); }
 function cerrarSonar() { document.getElementById('sonar').classList.remove('on'); }
 setInterval(() => { if (ytListo && yt.getCurrentTime) document.getElementById('sTiempo').textContent = mmss(yt.getCurrentTime() || 0); }, 500);
