@@ -45,6 +45,13 @@
   .disco div { padding:12px 14px 14px; }
   .disco small { color:var(--burdeos); font-weight:700; letter-spacing:.12em; font-size:.7rem; text-transform:uppercase; }
   .disco b { display:block; font-family:var(--serif); font-size:1.35rem; font-weight:600; line-height:1.15; margin-top:2px; }
+  .bio { margin:28px 0 0; background:var(--blanco); border:2px solid var(--ebano); border-radius:18px; overflow:hidden; }
+  .bio summary { list-style:none; cursor:pointer; padding:16px 18px; font-family:var(--serif); font-size:1.6rem; font-weight:600; display:flex; justify-content:space-between; align-items:center; }
+  .bio summary::-webkit-details-marker { display:none; }
+  .bio summary::after { content:'+'; color:var(--burdeos); font-family:var(--sans); font-size:1.6rem; }
+  .bio[open] summary::after { content:'−'; }
+  .bio div { padding:0 18px 8px; border-top:1px solid #e3d9c6; }
+  .bio p { line-height:1.6; margin:14px 0; }
   .firma { text-align:center; font-family:var(--serif); font-style:italic; color:var(--burdeos); font-size:1.6rem; margin:48px 0 0; }
 
   /* Página de disco */
@@ -133,7 +140,7 @@
   <button id="instB" onclick="instalar()">Instalar</button><button class="x" onclick="cerrarInst()">✕</button></div>
 
 <script>
-const VERSION = 'v1.7';
+const VERSION = 'v1.8';
 // Discos sacados del canal de YouTube @letyvidez4407 (listas de reproducción)
 // Formato de cada canción: [id de vídeo, título, créditos, duración]
 const DISCOS = [
@@ -179,6 +186,15 @@ const DISCOS = [
     ['fXkWZ30NBLY','Recuerdos','','2:53'] ]},
 ];
 
+// Biografía (texto facilitado por la familia). Un elemento por párrafo.
+const BIOGRAFIA = [
+  'Lety Vídez es autora e intérprete de las piezas musicales de sus cinco discos publicados. Actualmente compone música para piano, fusión de clasicismo romántico con pinceladas modernas, fruto de sus influencias más intensas: Chopin, Gershwin, Piazzola o Bee Gees.',
+  'Lety, nacida Leticia Benavidez Alessandro (Buenos Aires, 1937) ya fue una niña prodigio que -desde los 3 a los 5 años- formó parte de un programa diario de Radio Belgrano en el que niños y niñas con habilidades recitaban y cantaban en la emisora y también en teatros. A los 6 años empezó a estudiar danza clásica y a los 11 entró en el Conservatorio Municipal Manuel de Falla de Buenos Aires. Entre los 15 y los 18 años lo interrumpe para hacer una gira como bailarina de danza española y moderna con el Ballet de Carlos Manuel, actuando en diversas ciudades de Chile, Perú, Colombia y Venezuela. De vuelta a Buenos Aires continúa sus estudios de piano en el Conservatorio Alberto Williams convirtiéndose en profesora y obteniendo el 1er premio (Medalla de Oro).',
+  'Estudia dos años de Historia del Arte en la U.B.A. para pasarse a la facultad de Psicología, donde se licencia con la especialidad de Psicoanálisis, continuando dicha especialidad en postgrados. En 1979 se muda con su familia a España (Madrid y Barcelona), donde ejerce de psicóloga y profesora de cursos psicoanalíticos.',
+  'El piano fue siempre su instrumento preferido, interpretando las obras clásicas de Bach, Beethoven, Mozart, Liszt, Chopin, Debussy o Albéniz.',
+  'Hace unos años surge una nueva faceta de su personalidad. Un sueño nocturno recurrente le dicta unas notas que ella traslada a una primera partitura propia. Esa fuente de inspiración y una dedicación creativa posterior la llevan a componer y grabar su primer disco: Ensueños (2021). Continuaría componiendo piezas musicales -con letras propias y con colaboraciones de otr@s cantantes- en sus siguientes discos, Incertidumbre (2022), Azul Intenso (2023) y Noche de Luna (2025), con canciones en español, italiano, inglés y francés. Actualmente está en proceso de grabación de su quinto disco: Entre tus Manos (lanzamiento previsto en diciembre de 2026). Además del formato CD, pueden escucharse en YouTube y Spotify.',
+];
+
 const app = document.getElementById('app');
 const portada = d => `portadas/disco${d.n}.jpg`;
 const mmss = s => Math.floor(s/60) + ':' + String(Math.floor(s%60)).padStart(2,'0');
@@ -209,6 +225,10 @@ function showList() {
         <img src="${portada(d)}" alt="">
         <div><b>${d.titulo}</b><small>${d.anio}</small></div>
       </a>`).join('')}</div>
+    <details class="bio">
+      <summary>Biografía</summary>
+      <div>${BIOGRAFIA.map(p => `<p>${p}</p>`).join('')}</div>
+    </details>
     <p style="text-align:center;color:var(--gris);font-size:.8rem">${VERSION}</p>`;
 }
 
