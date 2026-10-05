@@ -46,11 +46,11 @@
   .disco small { color:var(--burdeos); font-weight:700; letter-spacing:.12em; font-size:.7rem; text-transform:uppercase; }
   .disco b { display:block; font-family:var(--serif); font-size:1.35rem; font-weight:600; line-height:1.15; margin-top:2px; }
   .bio { margin:28px 0 0; background:var(--blanco); border:2px solid var(--ebano); border-radius:18px; overflow:hidden; }
-  .bio summary { list-style:none; cursor:pointer; padding:16px 18px; font-family:var(--serif); font-size:1.6rem; font-weight:600; display:flex; justify-content:space-between; align-items:center; }
-  .bio summary::-webkit-details-marker { display:none; }
-  .bio summary::after { content:'+'; color:var(--burdeos); font-family:var(--sans); font-size:1.6rem; }
-  .bio[open] summary::after { content:'−'; }
-  .bio div { padding:0 18px 8px; border-top:1px solid #e3d9c6; }
+  .bioBtn { width:100%; background:none; border:none; color:var(--ebano); cursor:pointer; padding:16px 18px; font-family:var(--serif); font-size:1.6rem; font-weight:600; display:flex; justify-content:space-between; align-items:center; text-align:left; }
+  .bioBtn::after { content:'+'; color:var(--burdeos); font-family:var(--sans); font-size:1.6rem; }
+  .bio.open .bioBtn::after { content:'−'; }
+  .bio div { display:none; padding:0 18px 8px; border-top:1px solid #e3d9c6; }
+  .bio.open div { display:block; }
   .bio p { line-height:1.6; margin:14px 0; }
   .firma { text-align:center; font-family:var(--serif); font-style:italic; color:var(--burdeos); font-size:1.6rem; margin:48px 0 0; }
 
@@ -140,7 +140,7 @@
   <button id="instB" onclick="instalar()">Instalar</button><button class="x" onclick="cerrarInst()">✕</button></div>
 
 <script>
-const VERSION = 'v1.8';
+const VERSION = 'v1.9';
 // Discos sacados del canal de YouTube @letyvidez4407 (listas de reproducción)
 // Formato de cada canción: [id de vídeo, título, créditos, duración]
 const DISCOS = [
@@ -196,7 +196,7 @@ const BIOGRAFIA = [
 ];
 
 const app = document.getElementById('app');
-const portada = d => `portadas/disco${d.n}.jpg`;
+const portada = d => `portadas/disco${d.n}.jpg?v=${VERSION}`; // ?v= obliga a pedir la portada nueva en cada versión
 const mmss = s => Math.floor(s/60) + ':' + String(Math.floor(s%60)).padStart(2,'0');
 let cola = [], actual = -1, yt, ytListo = false, pendiente = null;
 
@@ -225,10 +225,10 @@ function showList() {
         <img src="${portada(d)}" alt="">
         <div><b>${d.titulo}</b><small>${d.anio}</small></div>
       </a>`).join('')}</div>
-    <details class="bio">
-      <summary>Biografía</summary>
+    <section class="bio" id="bio">
+      <button type="button" class="bioBtn" onclick="document.getElementById('bio').classList.toggle('open')">Biografía</button>
       <div>${BIOGRAFIA.map(p => `<p>${p}</p>`).join('')}</div>
-    </details>
+    </section>
     <p style="text-align:center;color:var(--gris);font-size:.8rem">${VERSION}</p>`;
 }
 
