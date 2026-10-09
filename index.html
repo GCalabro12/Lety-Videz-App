@@ -67,6 +67,8 @@
   li .t b { display:block; font-family:var(--serif); font-size:1.35rem; font-weight:600; }
   li .t small { color:var(--gris); }
   li .d { color:var(--gris); font-variant-numeric:tabular-nums; }
+  li.sinvideo { cursor:default; opacity:.6; }
+  li.sinvideo .d { font-size:.8rem; }
   li.sonando .t b { color:var(--burdeos); }
 
   /* Mini reproductor */
@@ -140,9 +142,10 @@
   <button id="instB" onclick="instalar()">Instalar</button><button class="x" onclick="cerrarInst()">✕</button></div>
 
 <script>
-const VERSION = 'v1.9';
+const VERSION = 'v1.10';
 // Discos sacados del canal de YouTube @letyvidez4407 (listas de reproducción)
 // Formato de cada canción: [id de vídeo, título, créditos, duración]
+// id null = la canción está en el CD pero no en YouTube: sale en la lista, no se puede tocar
 const DISCOS = [
   { n:4, titulo:'Noche de luna', anio:2025, canciones:[
     ['R-4vHeovLN4','Preludio para una noche de luna','Violín: Laura Orallo','5:30'],
@@ -156,32 +159,33 @@ const DISCOS = [
     ['D0So3Pla0Wg','Evocaciones','','4:51'] ]},
   { n:3, titulo:'Azul intenso', anio:2023, canciones:[
     ['a-OG6lgD5ro','Destellos','','2:31'],
-    ['2fNJ5creM6Y','Reencuentro','','2:34'],
-    ['zoGbtKDWDzw','Je pense à toi','','2:39'],
+    ['2fNJ5creM6Y','Reencuentro','Voz: Gisele Cornejo','2:34'],
+    ['zoGbtKDWDzw','Je pense à toi','Voz: Fernando Calabró','2:39'],
     ['RqBqfnCiOag','Desde el alma','','3:18'],
-    ['_KVBYm_yCas','Mis recuerdos','','3:23'],
-    ['WVrOXkVO3lQ','Amor prohibido','','1:56'],
+    ['_KVBYm_yCas','Mis recuerdos','Voz: Norberto Calabró','3:23'],
+    ['WVrOXkVO3lQ','Amor prohibido','Voz: Gisele Cornejo','1:56'],
     ['w2iT3wC6Xww','Chicago Style','','2:44'],
-    ['B0gwTdXX6GE','Azul intenso','','4:00'],
+    ['B0gwTdXX6GE','Azul intenso','Voz: Gisele Cornejo','4:00'],
     ['wupTlTVDTg4','Amanecer tempestuoso','','3:19'] ]},
   { n:2, titulo:'Incertidumbre', anio:2022, canciones:[
     ['md_BVv0YJDA','Preludio','','2:41'],
-    ['emso8o9ajbE','Te busco y no te encuentro','','2:24'],
-    ['ylJkFTzMxX8','Otoño en Baden Baden','','3:28'],
-    ['jx8Zvg5aN6c','Ascoltami e amami','','2:07'],
+    ['emso8o9ajbE','Te busco y no te encuentro','Voz: Valeria Calabró','2:24'],
+    ['ylJkFTzMxX8','Otoño en Baden-Baden','','3:28'],
+    ['jx8Zvg5aN6c','Ascoltami e amami','Voz: Valeria Calabró','2:07'],
     ['wIxlSmjcQwI','Quizás mañana','','3:03'],
-    ['kbOuUE4R6h0','Olvídate de mí','','2:42'],
+    ['kbOuUE4R6h0','Olvídate de mí','Voz: Valeria Calabró','2:42'],
     ['8e4thfoezwU','El resplandor de tu mirada','','5:33'],
+    [null,'Espérame','Voces: Inés Jiménez y Norberto Calabró',''],
     ['EM5I42Lqr7c','Incertidumbre','','3:14'] ]},
   { n:1, titulo:'Ensueños', anio:2021, canciones:[
-    ['uRI_wRZs7-A','Dreaming','','3:47'],
+    ['uRI_wRZs7-A','Dreams','','3:47'],
     ['897nGiV_o0Y','Reencuentro','','2:42'],
     ['8PKNwtNnbEQ','Crepúsculo','','3:47'],
     ['9TtpLRRY7rI','The Time','','1:23'],
     ['rYprKSNAS44','Nostalgia','','5:01'],
-    ['oGXaE-tP-6c','Despedida','','2:48'],
+    ['oGXaE-tP-6c','Despedida','Voz: Valeria Calabró','2:48'],
     ['4jyaH9UFPQM','Dilema','','4:41'],
-    ['N6-FZOzs5WA','Barcarola','','4:58'],
+    ['N6-FZOzs5WA','Barcarola','Voz: Norberto Calabró','4:58'],
     ['Jtj7Km6sWmk','Aires de mi tierra','','3:26'],
     ['fXkWZ30NBLY','Recuerdos','','2:53'] ]},
 ];
@@ -201,7 +205,7 @@ const mmss = s => Math.floor(s/60) + ':' + String(Math.floor(s%60)).padStart(2,'
 let cola = [], actual = -1, yt, ytListo = false, pendiente = null;
 
 // "La pieza de hoy": cambia cada día, la misma para todo el día
-const todas = DISCOS.flatMap(d => d.canciones.map(c => ({ c, d })));
+const todas = DISCOS.flatMap(d => d.canciones.filter(c => c[0]).map(c => ({ c, d })));
 const hoy = todas[Math.floor(Date.now() / 864e5) % todas.length];
 
 function saludo() {
@@ -241,9 +245,9 @@ function showAlbum(n) {
     <div class="cab"><h2>${d.titulo}</h2><p>${d.anio} · ${d.canciones.length} canciones</p>
     <button class="btn" onclick="tocarDisco(${d.n},0)">▷ Escuchar el disco</button></div>
     <ol>${d.canciones.map((c,i) => `
-      <li data-i="${i}" onclick="tocarDisco(${d.n},${i})"><span class="n">${i+1}</span>
+      <li data-i="${i}" ${c[0] ? `onclick="tocarDisco(${d.n},${i})"` : 'class="sinvideo"'}><span class="n">${i+1}</span>
       <span class="t"><b>${c[1]}</b>${c[2] ? `<small>${c[2]}</small>` : ''}</span>
-      <span class="d">${c[3]}</span></li>`).join('')}</ol>`;
+      <span class="d">${c[0] ? c[3] : 'Solo en CD'}</span></li>`).join('')}</ol>`;
   marcar();
 }
 
@@ -272,6 +276,7 @@ function botones(sonando) {
 function play(i) {
   const c = cola[i];
   if (!c) return;
+  if (!c[0]) return play(i > actual ? i + 1 : i - 1); // se salta las que no están en YouTube
   actual = i;
   document.getElementById('miniT').textContent = '♪ ' + c[1];
   document.getElementById('mini').classList.add('on');
