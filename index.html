@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Lety Videz</title>
+<title>Lety Vídez</title>
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
@@ -117,7 +117,7 @@
   .piano i { flex:1; border-right:1px solid var(--ebano); }
   .piano em { position:absolute; top:0; width:4%; height:55%; background:var(--ebano); }
 
-  /* Sello de marca «by Práctica Integral» (mismo que PC & Body-mind, con colores de Lety Videz) */
+  /* Sello de marca «by Práctica Integral» (mismo que PC & Body-mind, con colores de Lety Vídez) */
   .pie { text-align:center; margin:44px 0 0; }
   .pi-seal { display:inline-flex; align-items:center; gap:8px; font-size:12px; font-weight:600; letter-spacing:.3px; color:var(--gris);
              border:1px solid #d6cbb6; border-radius:999px; padding:6px 12px; text-decoration:none; transition:color .2s, border-color .2s; }
@@ -149,7 +149,7 @@
   <button id="instB" onclick="instalar()">Instalar</button><button class="x" onclick="cerrarInst()">✕</button></div>
 
 <script>
-const VERSION = 'v1.11';
+const VERSION = 'v1.12';
 // Discos sacados del canal de YouTube @letyvidez4407 (listas de reproducción)
 // Formato de cada canción: [id de vídeo, título, créditos, duración]
 // id null = la canción está en el CD pero no en YouTube: sale en la lista, no se puede tocar
@@ -223,7 +223,7 @@ function saludo() {
 function showList() {
   app.innerHTML = `
     <p class="saludo">${saludo()}</p>
-    <div class="nombre"><h1><em>Lety Videz</em></h1><img src="lety-videz.png" alt="Lety Videz"></div>
+    <div class="nombre"><h1><em>Lety Vídez</em></h1><img src="lety-videz.png" alt="Lety Vídez"></div>
     <section class="hoy">
       <div class="etq">La pieza de hoy</div>
       <h2>${hoy.c[1]}</h2>
@@ -289,7 +289,7 @@ function play(i) {
   document.getElementById('miniT').textContent = '♪ ' + c[1];
   document.getElementById('mini').classList.add('on');
   document.getElementById('sT').textContent = c[1];
-  document.getElementById('sC').textContent = c[2] || 'Lety Videz';
+  document.getElementById('sC').textContent = c[2] || 'Lety Vídez';
   document.getElementById('sDur').textContent = '/ ' + c[3];
   document.getElementById('sTiempo').textContent = '0:00';
   document.getElementById('sPortada').src = portada(DISCOS.find(d => d.canciones === cola));
@@ -326,7 +326,7 @@ async function instalar() {
   const capa = document.createElement('div');
   capa.className = 'inst-capa';
   capa.innerHTML = `<div class="inst-ventana" role="dialog" aria-label="Instalar la app">
-    <p style="font-size:1.2rem;margin:0 0 10px"><b>📲 Instalar la app Lety Videz</b></p>${pasos}
+    <p style="font-size:1.2rem;margin:0 0 10px"><b>📲 Instalar la app Lety Vídez</b></p>${pasos}
     <button type="button" class="btn borde inst-cerrar">Cerrar</button></div>`;
   capa.onclick = e => { if (e.target === capa || e.target.classList.contains('inst-cerrar')) capa.remove(); };
   const copiar = capa.querySelector('.inst-copiar');
