@@ -116,6 +116,13 @@
   .piano { display:flex; height:90px; background:var(--marfil); position:relative; flex-shrink:0; }
   .piano i { flex:1; border-right:1px solid var(--ebano); }
   .piano em { position:absolute; top:0; width:4%; height:55%; background:var(--ebano); }
+
+  /* Sello de marca «by Práctica Integral» (mismo que PC & Body-mind, con colores de Lety Videz) */
+  .pie { text-align:center; margin:44px 0 0; }
+  .pi-seal { display:inline-flex; align-items:center; gap:8px; font-size:12px; font-weight:600; letter-spacing:.3px; color:var(--gris);
+             border:1px solid #d6cbb6; border-radius:999px; padding:6px 12px; text-decoration:none; transition:color .2s, border-color .2s; }
+  .pi-seal::before { content:""; width:7px; height:7px; border-radius:50%; background:var(--laton); }
+  .pi-seal:hover { color:var(--burdeos); border-color:var(--laton); }
 </style>
 </head>
 <body>
@@ -142,7 +149,7 @@
   <button id="instB" onclick="instalar()">Instalar</button><button class="x" onclick="cerrarInst()">✕</button></div>
 
 <script>
-const VERSION = 'v1.10';
+const VERSION = 'v1.11';
 // Discos sacados del canal de YouTube @letyvidez4407 (listas de reproducción)
 // Formato de cada canción: [id de vídeo, título, créditos, duración]
 // id null = la canción está en el CD pero no en YouTube: sale en la lista, no se puede tocar
@@ -233,6 +240,7 @@ function showList() {
       <button type="button" class="bioBtn" onclick="document.getElementById('bio').classList.toggle('open')">Biografía</button>
       <div>${BIOGRAFIA.map(p => `<p>${p}</p>`).join('')}</div>
     </section>
+    <div class="pie"><a class="pi-seal" href="https://practicaintegral.club" target="_blank" rel="noopener">by Práctica Integral</a></div>
     <p style="text-align:center;color:var(--gris);font-size:.8rem">${VERSION}</p>`;
 }
 
