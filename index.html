@@ -117,12 +117,15 @@
   .piano i { flex:1; border-right:1px solid var(--ebano); }
   .piano em { position:absolute; top:0; width:4%; height:55%; background:var(--ebano); }
 
-  /* Sello de marca «by Práctica Integral» (mismo que PC & Body-mind, con colores de Lety Vídez) */
+  /* Sellos «by Práctica Integral» y «with Grow Panel» (Grow Panel/SELLO.md, con colores de Lety Vídez) */
   .pie { text-align:center; margin:44px 0 0; }
-  .pi-seal { display:inline-flex; align-items:center; gap:8px; font-size:12px; font-weight:600; letter-spacing:.3px; color:var(--gris);
+  .sellos { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; }
+  .pi-seal, .gp-seal { display:inline-flex; line-height:14px; white-space:nowrap; align-items:center; gap:8px; font-size:12px; font-weight:600; letter-spacing:.3px; color:var(--gris);
              border:1px solid #d6cbb6; border-radius:999px; padding:6px 12px; text-decoration:none; transition:color .2s, border-color .2s; }
   .pi-seal::before { content:""; width:7px; height:7px; border-radius:50%; background:var(--laton); }
+  .gp-seal svg { width:14px; height:14px; flex:none; }
   .pi-seal:hover { color:var(--burdeos); border-color:var(--laton); }
+  .gp-seal:hover { color:var(--burdeos); border-color:#8b5cf6; }
 </style>
 </head>
 <body>
@@ -149,7 +152,7 @@
   <button id="instB" onclick="instalar()">Instalar</button><button class="x" onclick="cerrarInst()">✕</button></div>
 
 <script>
-const VERSION = 'v1.13';
+const VERSION = 'v1.14';
 // Discos sacados del canal de YouTube @letyvidez4407 (listas de reproducción)
 // Formato de cada canción: [id de vídeo, título, créditos, duración]
 // id null = la canción está en el CD pero no en YouTube: sale en la lista, no se puede tocar
@@ -240,7 +243,10 @@ function showList() {
       <button type="button" class="bioBtn" onclick="document.getElementById('bio').classList.toggle('open')">Biografía</button>
       <div>${BIOGRAFIA.map(p => `<p>${p}</p>`).join('')}</div>
     </section>
-    <div class="pie"><a class="pi-seal" href="https://practicaintegral.club" target="_blank" rel="noopener">by Práctica Integral</a></div>
+    <div class="pie"><div class="sellos">
+      <a class="pi-seal" href="https://practicaintegral.club" target="_blank" rel="noopener">by Práctica Integral</a>
+      <a class="gp-seal" href="https://practicaintegral.club/grow-panel/" target="_blank" rel="noopener"><svg viewBox="0 0 512 512" aria-hidden="true"><circle cx="256" cy="107.5" r="69.1" fill="#f59e0b"/><circle cx="397.2" cy="210.1" r="69.1" fill="#0f766e"/><circle cx="343.3" cy="376.1" r="69.1" fill="#8b5cf6"/><circle cx="168.7" cy="376.1" r="69.1" fill="#3b82f6"/><circle cx="114.8" cy="210.1" r="69.1" fill="#ef4444"/><circle cx="256" cy="256" r="79.4" fill="#6b7280"/></svg>with Grow Panel</a>
+    </div></div>
     <p style="text-align:center;color:var(--gris);font-size:.8rem">${VERSION}</p>`;
 }
 
