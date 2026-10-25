@@ -49,6 +49,8 @@
   .bioBtn { width:100%; background:none; border:none; color:var(--ebano); cursor:pointer; padding:16px 18px; font-family:var(--serif); font-size:1.6rem; font-weight:600; display:flex; justify-content:space-between; align-items:center; text-align:left; }
   .bioBtn::after { content:'+'; color:var(--burdeos); font-family:var(--sans); font-size:1.6rem; }
   .bio.open .bioBtn::after { content:'−'; }
+  .webEnlace { display:block; font-weight:700; color:var(--burdeos); text-decoration:underline; word-break:break-all; margin:0 0 14px; font-size:1.05rem; }
+  #web .btn { margin:0 0 10px; font-size:1.1rem; padding:15px; }
   #ayuda .btn { margin:0 0 10px; font-size:1.1rem; padding:15px; text-decoration:none; }
   #ayuda .ayudaWa { border-color:var(--ebano); color:var(--ebano); }
   .ayudaDatos { font-size:.85rem; color:var(--gris); }
@@ -156,7 +158,7 @@
   <button id="instB" onclick="instalar()">Instalar</button><button class="x" onclick="cerrarInst()">✕</button></div>
 
 <script>
-const VERSION = 'v1.15';
+const VERSION = 'v1.16';
 // Discos sacados del canal de YouTube @letyvidez4407 (listas de reproducción)
 // Formato de cada canción: [id de vídeo, título, créditos, duración]
 // id null = la canción está en el CD pero no en YouTube: sale en la lista, no se puede tocar
@@ -247,6 +249,14 @@ function showList() {
       <button type="button" class="bioBtn" onclick="document.getElementById('bio').classList.toggle('open')">Biografía</button>
       <div>${BIOGRAFIA.map(p => `<p>${p}</p>`).join('')}</div>
     </section>
+    <section class="bio" id="web">
+      <button type="button" class="bioBtn" onclick="document.getElementById('web').classList.toggle('open')">🌐 Lety Vídez Web y compartir</button>
+      <div>
+        <p>Lety Vídez también funciona en el navegador, en cualquier móvil u ordenador:</p>
+        <a class="webEnlace" href="${WEB_APP}" target="_blank" rel="noopener">${WEB_APP.replace('https://', '')}</a>
+        <button type="button" class="btn" onclick="recomendar(this)">📤 Recomendar Lety Vídez</button>
+      </div>
+    </section>
     <section class="bio" id="ayuda">
       <button type="button" class="bioBtn" onclick="document.getElementById('ayuda').classList.toggle('open')">🆘 Ayuda y soporte</button>
       <div>
@@ -276,6 +286,15 @@ function showAlbum(n) {
       <span class="t"><b>${c[1]}</b>${c[2] ? `<small>${c[2]}</small>` : ''}</span>
       <span class="d">${c[0] ? c[3] : 'Solo en CD'}</span></li>`).join('')}</ol>`;
   marcar();
+}
+
+// Web de la app (cuando esté en Google Play, cambiar por el enlace de Play)
+const WEB_APP = 'https://gcalabro12.github.io/Lety-Videz-App/';
+async function recomendar(b) {
+  const texto = 'Te recomiendo Lety Vídez, una app que me está gustando mucho para escuchar los discos de piano de Lety Vídez. Pruébala aquí: ' + WEB_APP;
+  if (navigator.share) { try { await navigator.share({ text: texto }); return; } catch (e) { if (e.name === 'AbortError') return; } }
+  try { await navigator.clipboard.writeText(texto); b.textContent = '✓ Mensaje copiado'; } catch (e) {}
+  window.open('https://wa.me/?text=' + encodeURIComponent(texto), '_blank', 'noopener');
 }
 
 function tocarDisco(n, i) { cola = DISCOS.find(x => x.n == n).canciones; play(i); abrirSonar(); }
