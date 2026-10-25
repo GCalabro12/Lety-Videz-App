@@ -49,6 +49,10 @@
   .bioBtn { width:100%; background:none; border:none; color:var(--ebano); cursor:pointer; padding:16px 18px; font-family:var(--serif); font-size:1.6rem; font-weight:600; display:flex; justify-content:space-between; align-items:center; text-align:left; }
   .bioBtn::after { content:'+'; color:var(--burdeos); font-family:var(--sans); font-size:1.6rem; }
   .bio.open .bioBtn::after { content:'−'; }
+  #ayuda .btn { margin:0 0 10px; font-size:1.1rem; padding:15px; text-decoration:none; }
+  #ayuda .ayudaWa { border-color:var(--ebano); color:var(--ebano); }
+  .ayudaDatos { font-size:.85rem; color:var(--gris); }
+  .bio + .bio { margin-top:14px; }
   .bio div { display:none; padding:0 18px 8px; border-top:1px solid #e3d9c6; }
   .bio.open div { display:block; }
   .bio p { line-height:1.6; margin:14px 0; }
@@ -152,7 +156,7 @@
   <button id="instB" onclick="instalar()">Instalar</button><button class="x" onclick="cerrarInst()">✕</button></div>
 
 <script>
-const VERSION = 'v1.14';
+const VERSION = 'v1.15';
 // Discos sacados del canal de YouTube @letyvidez4407 (listas de reproducción)
 // Formato de cada canción: [id de vídeo, título, créditos, duración]
 // id null = la canción está en el CD pero no en YouTube: sale en la lista, no se puede tocar
@@ -242,6 +246,15 @@ function showList() {
     <section class="bio" id="bio">
       <button type="button" class="bioBtn" onclick="document.getElementById('bio').classList.toggle('open')">Biografía</button>
       <div>${BIOGRAFIA.map(p => `<p>${p}</p>`).join('')}</div>
+    </section>
+    <section class="bio" id="ayuda">
+      <button type="button" class="bioBtn" onclick="document.getElementById('ayuda').classList.toggle('open')">🆘 Ayuda y soporte</button>
+      <div>
+        <p>¿Algo no funciona o tienes una duda? Escríbenos y te ayudamos.</p>
+        <a class="btn" href="mailto:info@practicaintegral.club?subject=${encodeURIComponent('Lety Vídez · Ayuda')}&body=${encodeURIComponent('Hola, os escribo por Lety Vídez. Me pasa esto: …\n\n\n— Versión de la app: ' + VERSION)}">✉️ Escribir a soporte</a>
+        <a class="btn borde ayudaWa" href="https://wa.me/34658825799?text=${encodeURIComponent('Hola, os escribo por Lety Vídez (' + VERSION + '). Me pasa esto: ')}" target="_blank" rel="noopener">💬 Escribir por WhatsApp</a>
+        <p class="ayudaDatos">Email: info@practicaintegral.club · WhatsApp: +34 658 82 57 99</p>
+      </div>
     </section>
     <div class="pie"><div class="sellos">
       <a class="pi-seal" href="https://practicaintegral.club" target="_blank" rel="noopener">by Práctica Integral</a>
